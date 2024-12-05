@@ -1,0 +1,401 @@
+<html><head><base href="/" />
+<title>Cipher Craft</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2a2b2e;
+    --secondary: #b4e9d6;
+    --accent: #00b894;
+    --bg: #f5f6fa;
+  }
+  
+  body {
+    margin: 0;
+    padding: 40px 20px;
+    font-family: 'Noto Sans', sans-serif;
+    background: var(--bg);
+    color: var(--primary);
+    min-height: 100vh;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+  
+  .header h1 {
+    color: var(--primary);
+    font-size: 2.8em;
+    margin-bottom: 10px;
+    background: linear-gradient(120deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .header p {
+    color: #666;
+    font-size: 1.2em;
+  }
+  
+  .encryptor {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+  }
+  
+  .input-group {
+    margin-bottom: 25px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: #444;
+    font-size: 1.1em;
+  }
+  
+  select {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Noto Sans', sans-serif;
+    transition: all 0.3s ease;
+    background: var(--bg);
+    cursor: pointer;
+  }
+  
+  textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 16px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Noto Sans', sans-serif;
+    transition: all 0.3s ease;
+    resize: vertical;
+    line-height: 1.5;
+    max-height: 300px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Noto Sans', sans-serif;
+    transition: all 0.3s ease;
+  }
+  
+  select:focus, textarea:focus, input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,184,148,0.1);
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Noto Sans', sans-serif;
+    flex: 1;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,184,148,0.2);
+  }
+  
+  .output {
+    margin-top: 25px;
+    padding: 25px;
+    background: var(--bg);
+    border-radius: 10px;
+    min-height: 120px;
+  }
+  
+  #result {
+    word-break: break-all;
+    line-height: 1.6;
+    margin: 15px 0;
+  }
+  
+  .copy-btn {
+    background: var(--secondary);
+    color: var(--primary);
+    margin-top: 15px;
+    width: auto;
+    padding: 12px 24px;
+  }
+  
+  .copy-btn:hover {
+    background: #a3d8c5;
+  }
+  
+  @media (max-width: 600px) {
+    .buttons {
+      flex-direction: column;
+    }
+    
+    .encryptor {
+      padding: 25px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>CipherCraft</h1>
+    <p>Encrypt and decrypt your messages securely</p>
+  </div>
+  
+  <div class="encryptor">
+    <div class="input-group">
+      <label for="method">Encryption Method</label>
+      <select id="method">
+        <option value="caesar">Caesar Cipher</option>
+        <option value="vigenere">Vigenère Cipher</option>
+        <option value="base64">Base64</option>
+        <option value="reverse">Reverse Text</option>
+        <option value="rot13">ROT13</option>
+        <option value="morse">Morse Code</option>
+        <option value="binary">Binary</option>
+        <option value="atbash">Atbash Cipher</option>
+      </select>
+    </div>
+    
+    <div class="input-group key-group" style="display: none;">
+      <label for="key">Encryption Key</label>
+      <input type="text" id="key" placeholder="Enter your key">
+    </div>
+    
+    <div class="input-group">
+      <label for="input">Input Text</label>
+      <textarea id="input" rows="5" placeholder="Enter your message here"></textarea>
+    </div>
+    
+    <div class="buttons">
+      <button onclick="encrypt()">Encrypt</button>
+      <button onclick="decrypt()">Decrypt</button>
+    </div>
+    
+    <div class="output">
+      <label>Result:</label>
+      <p id="result"></p>
+      <button class="copy-btn" onclick="copyResult()">Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+<script>
+  const methodSelect = document.getElementById('method');
+const keyGroup = document.querySelector('.key-group');
+const input = document.getElementById('input');
+const key = document.getElementById('key');
+const result = document.getElementById('result');
+const MORSE_CODE = {
+  'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+  'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+  'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+  'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+  'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
+  '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+  '8': '---..', '9': '----.', ' ': '/'
+};
+
+const REVERSE_MORSE = Object.fromEntries(
+  Object.entries(MORSE_CODE).map(([key, value]) => [value, key])
+);
+
+methodSelect.addEventListener('change', () => {
+  const method = methodSelect.value;
+  keyGroup.style.display = (method === 'caesar' || method === 'vigenere') ? 'block' : 'none';
+});
+
+function encrypt() {
+  const method = methodSelect.value;
+  const text = input.value;
+  let encrypted;
+  switch(method) {
+    case 'caesar':
+      encrypted = caesarCipher(text, parseInt(key.value) || 3);
+      break;
+    case 'vigenere':
+      encrypted = vigenereCipher(text, key.value || 'KEY');
+      break;
+    case 'base64':
+      encrypted = btoa(text);
+      break;
+    case 'reverse':
+      encrypted = text.split('').reverse().join('');
+      break;
+    case 'rot13':
+      encrypted = caesarCipher(text, 13);
+      break;
+    case 'morse':
+      encrypted = toMorse(text);
+      break;
+    case 'binary':
+      encrypted = toBinary(text);
+      break;
+    case 'atbash':
+      encrypted = atbash(text);
+      break;
+  }
+  result.textContent = encrypted;
+}
+
+function decrypt() {
+  const method = methodSelect.value;
+  const text = input.value;
+  let decrypted;
+  switch(method) {
+    case 'caesar':
+      decrypted = caesarCipher(text, -(parseInt(key.value) || 3));
+      break;
+    case 'vigenere':
+      decrypted = vigenereDecipher(text, key.value || 'KEY');
+      break;
+    case 'base64':
+      try {
+        decrypted = atob(text);
+      } catch(e) {
+        decrypted = 'Invalid Base64 input';
+      }
+      break;
+    case 'reverse':
+      decrypted = text.split('').reverse().join('');
+      break;
+    case 'rot13':
+      decrypted = caesarCipher(text, 13);
+      break;
+    case 'morse':
+      decrypted = fromMorse(text);
+      break;
+    case 'binary':
+      decrypted = fromBinary(text);
+      break;
+    case 'atbash':
+      decrypted = atbash(text);
+      break;
+  }
+  result.textContent = decrypted;
+}
+
+function caesarCipher(str, shift) {
+  return str.split('').map(char => {
+    if (char.match(/[a-z]/i)) {
+      const code = char.charCodeAt(0);
+      const isUpperCase = code >= 65 && code <= 90;
+      const base = isUpperCase ? 65 : 97;
+      return String.fromCharCode(((code - base + shift) % 26 + 26) % 26 + base);
+    }
+    return char;
+  }).join('');
+}
+
+function vigenereCipher(text, key) {
+  text = text.toUpperCase();
+  key = key.toUpperCase();
+  let result = '';
+  for(let i = 0; i < text.length; i++) {
+    if(text[i].match(/[A-Z]/)) {
+      const textCode = text.charCodeAt(i) - 65;
+      const keyCode = key.charCodeAt(i % key.length) - 65;
+      result += String.fromCharCode(((textCode + keyCode) % 26) + 65);
+    } else {
+      result += text[i];
+    }
+  }
+  return result;
+}
+
+function vigenereDecipher(text, key) {
+  text = text.toUpperCase();
+  key = key.toUpperCase();
+  let result = '';
+  for(let i = 0; i < text.length; i++) {
+    if(text[i].match(/[A-Z]/)) {
+      const textCode = text.charCodeAt(i) - 65;
+      const keyCode = key.charCodeAt(i % key.length) - 65;
+      result += String.fromCharCode(((textCode - keyCode + 26) % 26) + 65);
+    } else {
+      result += text[i];
+    }
+  }
+  return result;
+}
+
+function toMorse(text) {
+  return text.toUpperCase().split('').map(char => 
+    MORSE_CODE[char] || char
+  ).join(' ');
+}
+
+function fromMorse(text) {
+  return text.split(' ').map(code => 
+    REVERSE_MORSE[code] || code
+  ).join('');
+}
+
+function toBinary(text) {
+  return text.split('').map(char => 
+    char.charCodeAt(0).toString(2).padStart(8, '0')
+  ).join(' ');
+}
+
+function fromBinary(text) {
+  return text.split(' ').map(bin => 
+    String.fromCharCode(parseInt(bin, 2))
+  ).join('');
+}
+
+function atbash(text) {
+  return text.split('').map(char => {
+    if (char.match(/[a-z]/i)) {
+      const code = char.charCodeAt(0);
+      const isUpperCase = code >= 65 && code <= 90;
+      const base = isUpperCase ? 65 : 97;
+      return String.fromCharCode(base + (25 - (code - base)));
+    }
+    return char;
+  }).join('');
+}
+
+function copyResult() {
+  navigator.clipboard.writeText(result.textContent).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => {
+      btn.textContent = 'Copy to Clipboard';
+    }, 2000);
+  });
+}
+</script>
+</body></html>
